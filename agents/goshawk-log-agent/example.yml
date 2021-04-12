@@ -1,0 +1,11 @@
+---
+rabbitmq:
+  proto: amqps
+  host: AMQP_HOST
+  port: 5671
+  vhost: /goshawk
+  user: goshawk
+  pass: PASS
+  exchange: nginx.access_logs
+
+logfile: /var/log/nginx/access_log
