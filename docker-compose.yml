@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+
+  ssl-nginx:
+    image: nginx:1.15-alpine
+    container_name: goshawk-ssl-nginx
+    ports:
+      - ::80:80
+    volumes:
+      - ./goshawk_data/ssl/nginx:/etc/nginx/conf.d
+      - ./goshawk_data/ssl/certbot/www:/var/www/certbot
+  ssl-certbot:
+    image: certbot/certbot
+    container_name: goshawk-ssl-certbot
+    volumes:
+      - ./goshawk_data/ssl/certbot/conf:/etc/letsencrypt
+      - ./goshawk_data/ssl/certbot/www:/var/www/certbot
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: goshawk-rmq
+    restart: always
+    networks:
+      - public
+    volumes:
+      - ./goshawk_data/rmq/etc:/etc/rabbitmq
+      - ./goshawk_data/rmq/data:/var/lib/rabbitmq
+      - ./goshawk_data/rmq/logs:/var/log/rabbitmq/log
+      - ./goshawk_data/ssl/ssl:/data/ssl
+    environment:
+      - RABBITMQ_NODENAME=goshawk-rmq
+      - RABBITMQ_DEFAULT_USER=goshawk
+      - RABBITMQ_DEFAULT_PASS=YOUR_RMQ_PASS
+      - RABBITMQ_DEFAULT_VHOST=/goshawk
+      - RABBITMQ_SSL_CACERTFILE=/data/ssl/chain.pem
+      - RABBITMQ_SSL_CERTFILE=/data/ssl/cert.pem
+      - RABBITMQ_SSL_KEYFILE=/data/ssl/privkey.pem
+      - RABBITMQ_SSL_FAIL_IF_NO_PEER_CERT=false
+      - RABBITMQ_SSL_VERIFY=verify_none
+      - RABBITMQ_MANAGEMENT_SSL_CACERTFILE=/data/ssl/chain.pem
+      - RABBITMQ_MANAGEMENT_SSL_CERTFILE=/data/ssl/cert.pem
+      - RABBITMQ_MANAGEMENT_SSL_KEYFILE=/data/ssl/privkey.pem
+    ports:
+      - ::5671:5671
+      - ::5672:5672
+      - ::15671:15671
+
+  postgresql:
+    image: postgres
+    container_name: goshawk-psql
+    volumes:
+      - ./goshawk_data/psql/data:/var/lib/postgresql/data
+      - ./goshawk_data/psql/logs:/var/log/postgresql/
+    environment:
+      - POSTGRES_DB=goshawk
+      - POSTGRES_USER=goshawk
+      - POSTGRES_PASSWORD=YOUR_PASS
+    ports:
+      - ::5432:5432
+
+networks:
+  public:
+    internal: false
+
