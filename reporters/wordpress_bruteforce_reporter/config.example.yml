@@ -1,0 +1,12 @@
+---
+
+goshawk:
+  api_url: https://goshawk/api
+  reporter: wordpress_bruteforce_reporter
+  list: web_attacks
+
+rabbitmq:
+  uri: amqps://amqpuser:amqppass@goshawk-rmq/%2Fgoshawk
+  exchange: nginx.access
+  routing_key: "#"
+
