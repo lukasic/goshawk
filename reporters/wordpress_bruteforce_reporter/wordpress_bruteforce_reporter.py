@@ -118,7 +118,7 @@ def parse_argv():
 
 
 def init():
-    global goshawk, blocklist_ip
+    global goshawk
     
     goshawk = GoshawkClient(
         config['goshawk']['api_url'])
