@@ -1,0 +1,17 @@
+---
+
+goshawk:
+  api_url: https://goshawk/api
+  reporter: dnsblquery_spam_domain_reporter
+  source_list: spam_domain_addrs
+  target_list: spam_domain_names
+
+rabbitmq:
+  uri: amqps://amqpuser:amqppass@goshawk-rmq/%2Fgoshawk
+  exchange: dnsbl.queries
+  routing_key: "#"
+
+reporter:
+  dnsbl_name: dnsbl.goshawk.local
+  worker_threads: 4
+
