@@ -3,31 +3,26 @@ from rest_framework import serializers
 from core.models import Collection, Reporter, List, Record
 
 
-class CollectionSerializer(serializers.HyperlinkedModelSerializer):
+class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
         fields = ['acronym', 'name', 'description', 'default_ttl']
 
 
-class ReporterSerializer(serializers.HyperlinkedModelSerializer):
+class ReporterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reporter
-        fields = [ "collection", "name", "active" ]
+        fields = [ "id", "collection", "name", "active" ]
+        lookup_field = "name"
 
-
-class ListSerializer(serializers.HyperlinkedModelSerializer):
+class ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = List
-        fields = [ "name", "reporter", "regex", "active" ]
+        fields = [ "id", "name", "reporter", "regex", "active" ]
 
 
-class RecordSerializer(serializers.HyperlinkedModelSerializer):
+class RecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Record
         fields = ["value", "policy", "reporter", "list", "reason", "created_at", "expires_at", "active"]
 
-    reporter = serializers.SlugRelatedField(
-        queryset=Reporter.objects.all(), slug_field='name')
-
-    list = serializers.SlugRelatedField(
-        queryset=List.objects.all(), slug_field='name')

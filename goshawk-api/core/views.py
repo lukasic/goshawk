@@ -18,13 +18,13 @@ class ReporterViewSet(viewsets.ModelViewSet):
     queryset = Reporter.objects.all()
     serializer_class = ReporterSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = [ "collection", "active" ]
+    filterset_fields = [ "id", "name", "collection", "active" ]
 
 class ListViewSet(viewsets.ModelViewSet):
     queryset = List.objects.all()
     serializer_class = ListSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = [ "reporter", "active" ]
+    filterset_fields = [ "id", "name", "reporter", "active" ]
 
 class RecordViewSet(viewsets.ModelViewSet):
     queryset = Record.objects.all()
